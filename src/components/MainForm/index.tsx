@@ -26,7 +26,7 @@ export function MainForm() {
 
     if(!taskNameInput) return;
 
-    const taskName = taskNameInput.current.value.trim();
+    const taskName = taskNameInput.current!.value.trim();
 
     if(!taskName) {
       showMessage.warning('Nome da tarefa não pode ficar vazio!')
