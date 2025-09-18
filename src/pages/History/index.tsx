@@ -7,9 +7,18 @@ import styles from './styles.module.css';
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
+import { initialTaskState } from "../../contexts/TaskContext/InitialTaskState";
+import { TaskActionTypes } from "../../contexts/TaskContext/TaskActions";
+import { showMessage } from "../../adapters/showMessage";
 
 export function History() {
-  const { state } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
+
+  function deleteTasks():void {
+    dispatch({type: TaskActionTypes.DELETE_TASKS});
+    localStorage.setItem('state', JSON.stringify(initialTaskState));
+    showMessage.success('Histórico apagado com sucesso!');
+  }
 
   return (
     <MainTemplate>
@@ -20,7 +29,8 @@ export function History() {
             <DefaultButton icon={<TrashIcon />}
               color="red"
               aria-label="Apagar todo o histórico"
-              title="Apagar todo o histórico" />
+              title="Apagar todo o histórico" 
+              onClick={deleteTasks}/>
           </span>
         </Heading>
       </Container>

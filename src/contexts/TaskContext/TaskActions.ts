@@ -5,8 +5,9 @@ export enum TaskActionTypes {
   INTERRUPT_TASK = 'INTERRUPT_TASK',
   RESET_STATE = 'RESET_STATE',
   COUNT_DOWN = 'COUNT_DOWN',
-  COMPLETE_TASK = 'COMPLETE_TASK'
-}
+  COMPLETE_TASK = 'COMPLETE_TASK',
+  DELETE_TASKS = 'DELETE_TASKS'
+};
 
 export type TaskActionsWithPayload = {
   type: TaskActionTypes.START_TASK;
@@ -22,6 +23,8 @@ export type TaskActionsWithoutPayload = {
   type: TaskActionTypes.INTERRUPT_TASK;
 } | {
   type: TaskActionTypes.COMPLETE_TASK;
+} | {
+  type: TaskActionTypes.DELETE_TASKS
 };
 
 export type TaskActionModel = TaskActionsWithPayload | TaskActionsWithoutPayload;
