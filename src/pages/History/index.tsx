@@ -9,8 +9,7 @@ import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
 
 export function History() {
-const {state} = useTaskContext();
-
+  const { state } = useTaskContext();
 
   return (
     <MainTemplate>
