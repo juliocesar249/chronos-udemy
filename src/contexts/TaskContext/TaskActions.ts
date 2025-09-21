@@ -23,8 +23,6 @@ export type TaskActionsWithoutPayload = {
   type: TaskActionTypes.INTERRUPT_TASK;
 } | {
   type: TaskActionTypes.COMPLETE_TASK;
-} | {
-  type: TaskActionTypes.DELETE_TASKS
 };
 
 export type TaskActionModel = TaskActionsWithPayload | TaskActionsWithoutPayload;

@@ -7,21 +7,49 @@ import styles from './styles.module.css';
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
-import { initialTaskState } from "../../contexts/TaskContext/InitialTaskState";
 import { TaskActionTypes } from "../../contexts/TaskContext/TaskActions";
 import { showMessage } from "../../adapters/showMessage";
 import { sortTasks, type SortTasksOptions } from "../../utils/sortTasks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function History() {
   const { state, dispatch } = useTaskContext();
+  const [confirmClearHistory, setConfirmClearHistory] = useState(false);
+  const hasTasks = state.tasks.length > 0;
+
   const [sortTasksOptions, setSortTasksOptions] = useState<SortTasksOptions>(() => {
     return {
       tasks: sortTasks({tasks: state.tasks}),
       field: 'startDate',
       direction: 'desc'
     }
-  })
+  });
+
+  useEffect(() => {
+    setSortTasksOptions(prevState => ({
+      ...prevState,
+      tasks: sortTasks({
+        tasks: sortTasks({
+          tasks: state.tasks,
+          direction: prevState.direction,
+          field: prevState.field
+        })
+      })
+    }))
+  }, [state]);
+
+  useEffect(() => {
+    if(!confirmClearHistory) return;
+    setConfirmClearHistory(false);
+
+    dispatch({type: TaskActionTypes.RESET_STATE});
+  }, [confirmClearHistory, dispatch]);
+
+  useEffect(() => {
+    return()=> {
+      showMessage.dismiss();
+    }
+  }, []);
 
   function handleSortTasks({field}: Pick<SortTasksOptions, 'field'>) {
     const newDirection = sortTasksOptions.direction === 'desc' ? 'asc' : 'desc';
@@ -38,9 +66,11 @@ export function History() {
   }
 
   function deleteTasks():void {
-    dispatch({type: TaskActionTypes.DELETE_TASKS});
-    localStorage.setItem('state', JSON.stringify(initialTaskState));
-    showMessage.success('Histórico apagado com sucesso!');
+    showMessage.dismiss();
+    showMessage.confirm("Tem certeza que deseja apagar o hitórico de tarefas?", confirmation => {
+      setConfirmClearHistory(confirmation);
+    });
+    // showMessage.success('Histórico apagado com sucesso!');
   }
 
   return (
@@ -48,6 +78,7 @@ export function History() {
       <Container>
         <Heading>
           <span>History</span>
+          {hasTasks && (
           <span className={styles.buttonContainer}>
             <DefaultButton icon={<TrashIcon />}
               color="red"
@@ -55,10 +86,12 @@ export function History() {
               title="Apagar todo o histórico" 
               onClick={deleteTasks}/>
           </span>
+          )}
         </Heading>
       </Container>
 
       <Container>
+        {hasTasks && (
         <div className={styles.responsiveTable}>
           <table>
             <thead>
@@ -91,6 +124,10 @@ export function History() {
             </tbody>
           </table>
         </div>
+      )}
+      {!hasTasks && (
+        <p style={{textAlign: "center", fontWeight: "bold"}}>Ainda não existem tarefas criadas</p>
+      )}
       </Container>
     </MainTemplate>
   )

@@ -31,7 +31,7 @@ export function taskReducer(state: TaskStateModel, action: TaskActionModel): Tas
     }
 
     case TaskActionTypes.RESET_STATE:
-      return state;
+      return {...initialTaskState};
 
     case TaskActionTypes.COUNT_DOWN: {
       return {...state,
@@ -50,10 +50,6 @@ export function taskReducer(state: TaskStateModel, action: TaskActionModel): Tas
           task.id === state.activeTask?.id ? {...task, completeDate: Date.now()} : task
         )
       };
-    }
-
-    case TaskActionTypes.DELETE_TASKS: {
-      return initialTaskState;
     }
   }
 }
