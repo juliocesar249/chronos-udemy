@@ -14,3 +14,11 @@ body {
     font-size: 1.6rem;
     color: var(--text-default);
 }
+
+.form, .formRow {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    justify-content: center;
+}
