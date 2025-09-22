@@ -13,6 +13,8 @@ import { sortTasks, type SortTasksOptions } from "../../utils/sortTasks";
 import { useEffect, useState } from "react";
 
 export function History() {
+  useEffect(() => {document.title = "Histórico - Chronos Pomodoro"}, []);
+
   const { state, dispatch } = useTaskContext();
   const [confirmClearHistory, setConfirmClearHistory] = useState(false);
   const hasTasks = state.tasks.length > 0;
